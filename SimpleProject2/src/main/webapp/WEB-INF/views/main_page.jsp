@@ -7,8 +7,11 @@
 <title>Insert title here</title>
 </head>
 <body>
-
-	<jsp:forward page="WEB-INF/views/main_page.jsp"/>
+	<jsp:include page="include/header.jsp"/>
+	
+	<div style="height : 500px"></div>
+	
+	<jsp:include page="include/footer.jsp"/>
 
 </body>
 </html>
