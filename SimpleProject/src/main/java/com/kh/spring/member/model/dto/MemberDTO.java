@@ -11,15 +11,14 @@ import lombok.ToString;
 @Getter
 @Setter
 @NoArgsConstructor
-@ToString
 @AllArgsConstructor
-
+@ToString
 public class MemberDTO {
-   private String memberId;
-   private String memberPw;
-   private String memberName;
-   private String email;
-   private Date enrollDate;
-   
-
+	
+	private String memberId;
+	private String memberPw;
+	private String memberName;
+	private String email;
+	private Date enrollDate;
+	
 }
