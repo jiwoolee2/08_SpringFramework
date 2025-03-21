@@ -4,31 +4,23 @@
   "https://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
 
-	<!--
-		environments,dataSource => DB연결 정보  
-		-> Java로 동작. dataSource타입에 객체로 무언가가 올라가야함
-		아래 property의 값이 객체의 필드에 저장됨. = setter메서드 역할
-	-->
 	
-<!-- 	<environments default="">
-		<environment id="">
-			<dataSource type="">
-				<property name="" value=""/>
-			</dataSource>
-		</environment>
-	</environments> -->
-
-
-	<!-- spring이 직접 관리하도록 함 -> Bean등록/XML파일이용  -->
+	
+	<settings>
+		<setting name="jdbcTypeForNull" value="NULL"/>
+	</settings>
 	
 	<typeAliases>
 		<typeAlias type="com.kh.spring.member.model.dto.MemberDTO" 
 				  alias="memberDTO"/>
 	</typeAliases>
 	
+	
 	<mappers>
 		<mapper resource="/mapper/member-mapper.xml"/>
-		
+		<mapper resource="/mapper/board-mapper.xml"/>
 	</mappers>
+	
+	
 	
 </configuration>
