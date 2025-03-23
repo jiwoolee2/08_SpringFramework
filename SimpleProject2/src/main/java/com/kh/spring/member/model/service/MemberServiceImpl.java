@@ -16,15 +16,18 @@ import com.kh.spring.member.model.dto.MemberDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+@
 public class MemberServiceImpl implements MemberService {
-
+	
+	final MemberDTO memberDto;
+	
 	@Override
 	public MemberDTO login(MemberDTO member) {
 		return null;
 	}
 
 	@Override
-	public void signUp(MemberDTO member) {
+	public void signup(MemberDTO member) {
 		
 	}
 

@@ -27,21 +27,28 @@ import lombok.extern.slf4j.Slf4j;
 public class MemberController {
 	
 
-	
+	@GetMapping("log-in")
 	public ModelAndView login() {
 		
 	}
 	
-//	public ModelAndView logout() {
-//		
-//	}
-//	
-//	public String signupForm() {
-//	}
-//	
-//	
-//	public String join() {
-//		
-//	}
+	public ModelAndView logout() {
+		
+	}
+	
+	@GetMapping("sign-up-form")
+	public String signupForm() {
+		return "/member/signup-form";
+	}
+	
+	@GetMapping("sign-up")
+	public String signupForm() {
+		return "/member/signup-form";
+	}
+	
+	
+	public String join() {
+		
+	}
 
 }

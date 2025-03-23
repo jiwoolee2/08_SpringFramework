@@ -12,7 +12,7 @@
 	
 	<typeAliases>
 		<typeAlias type="com.kh.spring.member.model.dto.MemberDTO" 
-				  alias="memberDTO"/>
+				   alias="memberDTO"/>
 	</typeAliases>
 	
 	

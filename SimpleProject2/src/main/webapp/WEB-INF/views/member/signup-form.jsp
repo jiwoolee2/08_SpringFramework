@@ -26,8 +26,7 @@
 </head>
 <body>
     
-    <!-- 메뉴바 -->
-    <jsp:include page="../include/header.jsp" />
+
 
     <div class="content">
         <br><br>
@@ -35,7 +34,7 @@
             <h2>회원가입</h2>
             <br>
 
-            <form action="signup" method="post">
+            <form action="sign-up" method="post">
                 <div class="form-group">
                     <label for="userId">* ID : </label>
                     <input type="text" class="form-control" id="userId" placeholder="Please Enter ID" name="memberId" required> <br>
@@ -54,8 +53,11 @@
                     <label for="userName">* Name : </label>
                     <input type="text" class="form-control" id="userName" placeholder="Please Enter Name" name="memberName" required> <br>
 
+                    <label for="userName">* Residence :</label>
+                    <input type="text" class="form-control" id="residence" placeholder="Please Enter Residence" name="residence" required> <br>
+					
                     <label for="email"> &nbsp; Email : </label>
-                    <input type="text" class="form-control" id="email" placeholder="Please Enter Email" name="email"> <br>
+                    <input type="text" class="form-control" id="userEmail" placeholder="Please Enter Email" name="memberEmail"> <br>
 
                 </div> 
                 <br>
@@ -69,8 +71,7 @@
 
     </div>
 
-    <!-- 푸터바 -->
-    <jsp:include page="../include/footer.jsp" />
+ 
 
 </body>
 </html>

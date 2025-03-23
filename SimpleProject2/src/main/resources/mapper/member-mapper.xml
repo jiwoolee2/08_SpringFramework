@@ -4,5 +4,20 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
   
 <mapper namespace="memberMapper">
-
+	
+	<insert id="signup"
+			parameterType="MemberDTO">
+	INSERT 
+		INTO
+			UNIKLO_MEMBER
+		VALUES(	
+				  MEMBER_ID
+				, MEMBER_PW
+				, MEMBER_NAME
+				, MEMBER_EMAIL
+				, RESIDENCE
+				, ENROLL_DATE
+			  )	
+	</insert>
+	
 </mapper>
