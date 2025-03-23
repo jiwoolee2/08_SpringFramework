@@ -50,15 +50,15 @@
         <div class="innerOuter" style="padding:5% 10%;">
             <h2>게시판</h2>
             <br>
-            	<c:if test="${ not empty sessionScope.loginMember }">
-	            <!-- 로그인 후 상태일 경우만 보여지는 글쓰기 버튼 -->
-	            <a class="btn btn-secondary" style="float:right;" href="form.bo">글쓰기</a>
-	            </c:if>
+               <c:if test="${ not empty sessionScope.loginMember }">
+               <!-- 로그인 후 상태일 경우만 보여지는 글쓰기 버튼 -->
+               <a class="btn btn-secondary" style="float:right;" href="form.bo">글쓰기</a>
+               </c:if>
             <br>
             <br>
             <table id="boardList" class="table table-hover" align="center">
                 <thead>
-                	<tr>
+                    <tr>
                         <th>글번호</th>
                         <th>제목</th>
                         <th>작성자</th>
@@ -69,58 +69,64 @@
                 </thead>
                 <tbody>
                 
-                	<script>
-                		function goBoard(num){
-                			location.href =`boards/\${num}`; 
-                		}
-                	</script>
-                
-                
-                
-                
-                
-                
-                  <c:choose>
-                		<c:when test="${ not empty map.boards}">
-                			<c:forEach var="board" items="${map.boards}">
-		                		<tr onclick="goBoard(${board.boardNo});">
-			                        <td>${board.boardNo }</td>
-			                        <td>${board.boardTitle }</td>
-			                        <td>${board.boardWriter }</td>
-			                        <td>${board.count }</td>
-			                        <td>${board.createDate}일</td>
-			                        <td>
-			                        	<c:if test="${ board.changeName }">
-			                        		...
-			                        	</c:if>
-			                        </td>
-			                    </tr>
-		                    </c:forEach>
-                		</c:when>
-                		<c:otherwise>
-                			<tr>
-                				<th colspan="6">게시글이 존재하지 않습니다.</th>
-                			</tr>
-                			
-                		</c:otherwise>
-                	</c:choose>
+                   <script>
+                  function goBoard(num){
+                     /* 브라우저의 URL을 ''안의 주소로 이동 
+                      ex num이 12면 board/12로 이동
+                     */
+                     location.href = `boards/\${num}`;
+                  }                   
+                   </script>
+                   <c:choose> 
+                      <c:when test="${ not empty map.boards }">
+                   <!-- ㅡmap.boards(리스트)에 게시물이 있다면 게시물의 개수만큼 아래 반복 
+                     즉 , map.boards안에 있는 board의 개수만큼 반복
+                   -->
+                         <c:forEach var="board" items="${ map.boards }">
+                             <tr onclick="goBoard(${ board.boardNo });">
+                             <!-- 테이블의 한행을 클릭하면 함수 goBoard를 호출해서
+                              boards/boardNo 로 이동
+                              -->
+                             
+                                 <td>${ board.boardNo }</td>
+                                 <td>${ board.boardTitle }</td>
+                                 <td>${ board.boardWriter }</td>
+                                 <td>${ board.count }</td>
+                                 <td>${ board.createDate }</td>
+                                 <td>
+                                    <c:if test="${ not empty board.changeName }">
+                                       띠용~~ 💌
+                                    </c:if>
+                                 </td>
+                             </tr>
+                          </c:forEach>
+                       </c:when>
+                       <c:otherwise>
+                          <tr>
+                        <th colspan="6">게시글이 존재하지 않습니다.</th>                          
+                          </tr>
+                       </c:otherwise>
+               </c:choose>                    
+                    
                 </tbody>
             </table>
             <br>
 
             <div id="pagingArea">
                 <ul class="pagination">
-                    <li class="page-item disabled"><a class="page-link" href="#">이전</a></li>
-                    	<c:forEach begin="${map.pageInfo.startPage }" 
-                    				end="${map.pageInfo.endPage }" 
-                    				var="num">
-                    		<li class="page-item">
-                    			<a class="page-link" href="boards?page=${num}">${num}</a>
-                    		</li>
-                    	</c:forEach>
-                    <li class="page-item"><a class="page-link" href="#">다음</a></li>	
-                    	
                 
+                    <li class="page-item disabled"><a class="page-link" href="#">이전</a></li>
+
+               <c:forEach begin="${ map.pageInfo.startPage }" 
+                        end="${ map.pageInfo.endPage }" 
+                        var="num">
+                       <li class="page-item">
+                          <a class="page-link" href="boards?page=${ num }">${ num }</a>
+                       </li>
+               </c:forEach>
+                    
+                    <li class="page-item"><a class="page-link" href="#">다음</a></li>
+                    
                 </ul>
             </div>
 

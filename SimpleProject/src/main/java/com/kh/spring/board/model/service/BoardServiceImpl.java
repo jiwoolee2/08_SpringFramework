@@ -1,11 +1,11 @@
 package com.kh.spring.board.model.service;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -22,6 +22,7 @@ import com.kh.spring.exception.AuthenticationException;
 import com.kh.spring.exception.InvalidParameterException;
 import com.kh.spring.member.model.dto.MemberDTO;
 import com.kh.spring.reply.model.dto.ReplyDTO;
+import com.kh.spring.reply.model.dto.ReplyDTO;
 import com.kh.spring.util.model.dto.PageInfo;
 import com.kh.spring.util.template.Pagination;
 
@@ -32,128 +33,120 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @RequiredArgsConstructor
 public class BoardServiceImpl implements BoardService {
+   
+   private final BoardMapper boardMapper;
  
-	private final BoardMapper boardMapper;
-	
-	@Override
-	public void insertBoard(BoardDTO board, MultipartFile upfile, HttpSession session) {
-		
-		// 1. 권한 체크
-		MemberDTO loginMember = (MemberDTO)session.getAttribute("loginMember");
-		if(loginMember != null && !loginMember.getMemberId().equals(board.getBoardWriter())) {
-			throw new AuthenticationException("권한 없는 접근입니다.");
-		}
-		log.info("게시글 제목: {}", board.getBoardTitle());
-		log.info("게시글 내용: {}", board.getBoardContent());
-		log.info("작성자: {}", board.getBoardWriter());
-		// 2. 유효성 검사
-		if(board.getBoardTitle() == null || board.getBoardTitle().trim().isEmpty() ||
-		   board.getBoardContent() == null || board.getBoardContent().trim().isEmpty() ||
-		   board.getBoardWriter() == null || board.getBoardWriter().trim().isEmpty()) {
-			throw new InvalidParameterException("유효하지 않은 요청입니다.");
-		}
-		
-		// 2_2)
-		
-		// 3) 파일유무체크 // 이름바꾸기 + 저장
-		if(!upfile.getOriginalFilename().isEmpty()) {
-			
-			// 이름바꾸기
-			// KH_현재시간+원본파일확장자
-			
-			StringBuilder sb = new StringBuilder();
-			String currentTime = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
-					log.info("현재시간 : {}", currentTime);
-			int random = (int)(Math.random()*900) + 100;
-			String ext = upfile.getOriginalFilename().substring(upfile.getOriginalFilename().lastIndexOf("."));
-			sb.append("KH_");
-			sb.append(currentTime);
-			sb.append("_");
-			sb.append(random);
-			sb.append(ext);
-			
-			log.info("바뀐 파일명 : {}", sb.toString());
-			
-			// applicationScope(전체에서 사용가능한 저장공간)를 반환 
-			ServletContext application = session.getServletContext();
-			
-			// 저장할 경로
-			String savePath = application.getRealPath("/resources/upload_files/");
-			
-			try {
-				upfile.transferTo(new File(savePath+sb.toString()));
-			} catch (IllegalStateException | IOException e) {
-				e.printStackTrace();
-			}
-			
-			board.setChangeName("/spring/resources/upload_files/"+sb.toString());
-		}
-		
-		boardMapper.insertBoard(board);
-		
+   @Override
+   public void insertBoard(BoardDTO board, MultipartFile file, HttpSession session) {
+      
+      // 1. 권한 체크
+      MemberDTO loginMember = (MemberDTO)session.getAttribute("loginMember");
+      if(loginMember != null && !loginMember.getMemberId().equals(board.getBoardWriter())) {
+         throw new AuthenticationException("권한 없는 접근입니다.");
+      }
+      
+      // 2. 유효성 검사
+      if(board.getBoardTitle() == null || board.getBoardTitle().trim().isEmpty() ||
+         board.getBoardContent() == null || board.getBoardContent().trim().isEmpty() ||
+         board.getBoardWriter() == null || board.getBoardWriter().trim().isEmpty()) {
+         throw new InvalidParameterException("유효하지 않은 요청입니다.");
+      }
+      
+      // 2_2)
+      
+      // 3) 파일유무체크 // 이름바꾸기 + 저장
+      if(!file.getOriginalFilename().isEmpty()) {
+         
+         // 이름바꾸기
+         // KH_현재시간+랜덤숫자+원본파일확장자
+         StringBuilder sb = new StringBuilder();
+         sb.append("KH_");
+         String currentTime = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
+         // log.info("현재시간 : {}", currentTime);
+         sb.append(currentTime);
+         sb.append("_");
+         int random = (int)(Math.random() * 900) + 100;
+         sb.append(random);
+         String ext = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));
+         sb.append(ext);
+         // log.info("바뀐 파일명 : {}", sb.toString());
+         
+         ServletContext application = session.getServletContext();
+         
+         String savePath = application.getRealPath("/resources/upload_files/");
+         
+         try {
+            file.transferTo(new File(savePath + sb.toString()));
+         } catch (IllegalStateException | IOException e) {
+            e.printStackTrace();
+         }
+         board.setChangeName("/spring/resources/upload_files/" + sb.toString());
+      }
+      boardMapper.insertBoard(board);
+   }
 
-	}
+   
+   // 게시판에서 페이지 정보와 한 페이지에 나오는 게시글의 정보를 반환하는 메서드
+   @Override
+   public Map<String, Object> selectBoardList(int currentPage) {
+      
+      List<BoardDTO> boards = new ArrayList();
+      Map<String, Object> map = new HashMap();
+      
+      // 게시판에 있는 게시글의 게수 조회
+      int count = boardMapper.selectTotalCount();
+      
+      // getPageInfo : 페이징 처리에 필요한 정보를 계산해서 리턴하는 메서드
+      // 한페이지에 5개씪 보여주고, 하단에 보여지는 페이지 수는 5개로 설정
+      PageInfo pi = Pagination.getPageInfo(count, currentPage, 5, 5);
+      
+      if(count != 0) {
+         /* RowBounds(offset,limit) : MyBatis에서 메모리 기반 페이징 처리를 위한 도구
+          * offset : 건너뛸 게시글 수 , limit : 보여줄 게시글 수
+          * => 하단에 페이지 3을 누르면 앞에 1,2페이지의 게시글을 건너뛰고 
+          *      3페이지의 게시글부터 보여주기 위해서 사용
+          * 
+          */
+         RowBounds rb = new RowBounds((currentPage - 1) * 5, 5);
+         
+         // 현재 페이지가 3이라면 10개의 게시물을 건너뛰고 11번째 게시글부터 5개를 가져옴
+         // 5개 게시물의 정보를 boards list에 담음
+         boards = boardMapper.selectBoardList(rb);
+      }
+      
+      map.put("boards", boards);
+      map.put("pageInfo", pi);
+      
+      return map;
+   }
 
-	@Override
-	public Map<String, Object> selectBoardList(int currentPage) {
-		List<BoardDTO> boards = new ArrayList();
-		
-		
-		// 게시글 개수가 없을 경우 DB에 안가고 바로 controller로 예외발생x 로 돌아감
-		int count = boardMapper.selectTotalCount();
-		PageInfo pi = Pagination.getPageInfo(count, currentPage, 5 ,5);
-		
-		if(count != 0) {
-			RowBounds rb = new RowBounds((currentPage -1)*5,5);
-			boards = boardMapper.selectBoardList(rb);
-		}
-		
-		
-		// map에다가 게시글이 있다면 게시글을 리스트에 담고, 페이지에대한 정보를 같이 담아서 리턴
-		Map<String, Object> map = new HashMap();
-		
-		map.put("boards", boards);
-		map.put("pageInfo", pi);
-		
-		return map;
-	}
+   @Override
+   public BoardDTO selectBoard(int boardNo) {
+      
+      // 1절
+      //BoardDTO board = boardMapper.selectBoard(boardNo);
+      
+      // 2절
+      //List<ReplyDTO> replyList = boardMapper.selectReply(boardNo);
+      //board.setReplyList(replyList);
+      // 3절
+      
+      // boardNO로 게시물의 정보를 조회한 후 BoardDTO객체에 담아서 반환
+      BoardDTO board = boardMapper.selectBoardAndReply(boardNo);
+      if(board == null) {
+         throw new InvalidParameterException("존재하지 않는 게시글입니다.");
+      }
+      return board;
+   }
 
-	@Override
-	public BoardDTO selectBoard(int boardNo) {
-		
-		// 1절
-		//BoardDTO board = boardMapper.selectBoard(boardNo);
-		
-		/* 게시글이 존재하지 않으면 예외 발생*/ 
-		//if(board == null) {
-			//throw new InvalidParameterException("존재하지 않는 게시글입니다.");
-		
-		// 2절
-		//List<ReplyDTO> replyList = boardMapper.selectReply(boardNo);
-		//board.setReplyList(replyList);
-		
-		
-		
-		
-		//3절
-	BoardDTO board = boardMapper.selectBoardAndReply(boardNo);
-	if(board == null) {
-		throw new InvalidParameterException("존재하지않는게시글입니다.");
-		
-	}	
-		
-	
-		return board;
-	}
+   @Override
+   public BoardDTO updateBoard(BoardDTO board, MultipartFile file) {
+      return null;
+   }
 
-	@Override
-	public BoardDTO updateBoard(BoardDTO board, MultipartFile file) {
-		return null;
-	}
+   @Override
+   public void deleteBoard(int boardNo) {
 
-	@Override
-	public void deleteBoard(int boardNo) {
-
-	}
+   }
 
 }

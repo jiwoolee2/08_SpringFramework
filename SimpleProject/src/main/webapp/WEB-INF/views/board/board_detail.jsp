@@ -55,18 +55,17 @@
                     <th>첨부파일</th>
                     
                     <c:choose>
-	                    <c:when test="${ not empty board.changeName }">
-		                    <td colspan="3">
-		                        <a href="${ board.changeName }" download="${ board.changeName }">${ board.changeName }</a>
-		                    </td>
-	                    </c:when>
-	                    <c:otherwise>
-	                    	<td colspan="3">
-	                    		첨부파일이 존재하지 않습니다.
-	                    	</td>
-	                    </c:otherwise>
+                       <c:when test="${ not empty board.changeName }">
+                          <td colspan="3">
+                              <a href="${ board.changeName }" download="${ board.changeName }">${ board.changeName }</a>
+                          </td>
+                       </c:when>
+                       <c:otherwise>
+                          <td colspan="3">
+                             첨부파일이 존재하지 않습니다.
+                          </td>
+                       </c:otherwise>
                     </c:choose>
-                    
                 </tr>
                 <tr>
                     <th>내용</th>
@@ -100,22 +99,22 @@
                 <tbody>
                     
                     <c:choose>
-                    	<c:when test="${ not empty board.replyList }">
-                    		<c:forEach items="${ board.replyList }" var="reply">
-	                    		<tr>
-	                    			<th>${ reply.replyWriter }</th>
-	                    			<th>${ reply.replyContent }</th>
-	                    			<th>${ reply.createDate }</th>
-	                    		</tr> 
-                    		</c:forEach>                   	
-                    	</c:when>
-                    	
-                    	<c:otherwise>
-                    		<tr>
-                    			<td colspan="3">댓글이 존재하지 않습니다.</td>
-                    		</tr>
-                    	</c:otherwise>
+                       <c:when test="${ not empty board.replyList }">
+                          <c:forEach items="${ board.replyList }" var="reply">
+                             <tr>
+                                <th>${ reply.replyWriter }</th>
+                                <td>${ reply.replyContent }</td>
+                                <td>${ reply.createDate }</td>
+                             </tr>
+                          </c:forEach>
+                       </c:when>
+                       <c:otherwise>
+                     <tr>
+                        <td colspan="3">댓글이 존재하지 않습니다.</td>
+                     </tr>                       
+                       </c:otherwise>   
                     </c:choose>
+                    
                 </tbody>
             </table>
         </div>

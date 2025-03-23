@@ -20,11 +20,16 @@ import com.kh.spring.member.model.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+
+@Controller
+@RequiredArgsConstructor
+@Slf4j
 public class MemberController {
 	
 
 	
 	public ModelAndView login() {
+		
 	}
 	
 //	public ModelAndView logout() {
