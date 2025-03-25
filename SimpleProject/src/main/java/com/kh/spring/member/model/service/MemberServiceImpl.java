@@ -136,5 +136,10 @@ public class MemberServiceImpl implements MemberService {
 		return 0;
 	}
 
-
+	public String idCheck(String memberId) {
+		
+		String result = memberMapper.idCheck(memberId) != null ? "NNNNY" : "NNNNN";
+		return result;
+	}
+	
 }

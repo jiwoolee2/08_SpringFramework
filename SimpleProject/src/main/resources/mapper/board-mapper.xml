@@ -91,7 +91,7 @@
 		<result column="boardTitle" 	 property="boardTitle"/>
 		<result column="boardContent"    property="boardContent"/>
 		<result column="boardWriter"     property="boardWriter"/>
-		<result column="boardCreateDate" property="CreateDate"/>
+		<result column="boardCreateDate" property="createDate"/>
 		<result column="changeName" 	 property="changeName"/>
 		
 		<!-- 1:N 관계에서 사용 -->
@@ -122,15 +122,96 @@
 		FROM
 		        TB_SPRING_BOARD 
 	LEFT JOIN 
-		        TB_REPLY ON (BOARD_NO = REF_BOARD_NO);
+		        TB_REPLY ON (BOARD_NO = REF_BOARD_NO)
 		
 		WHERE
-				BOARD_NO =#{boardNo}
+				BOARD_NO = #{boardNo}
+	</select>
+	
+	
+	<!-- 게시물 검색해서 나온것들을 조회하는 SQL문 
+	제목이냐 내용이냐 작성자냐를 선택함에 따라 보여지는 게시물이 달라짐 -->
+	<select id="searchedCount"
+			parameterType="hashmap"
+			resultType="_int">
+		SELECT
+				COUNT(*)
+		  FROM
+		 		TB_SPRING_BOARD
+		 WHERE	
+		 		STATUS = 'Y'
+		  <if test="condition == 'writer'">
+		  	AND
+		  		BOARD_WRITER
+		  </if>
+		  <if test="condition == 'title'">
+		  	AND
+		  		BOARD_TITLE
+		  </if>
+		  <if test="condition == 'content'">
+		  	AND
+		  		BOARD_CONTENT
+		  </if>
+		  		LIKE '%' || #{keyword} || '%'
+		  
+	</select>	  		
+	
+	
+	<select id="selectSearchList" parameterType="hashmap"
+			resultType="com.kh.spring.board.model.dto.BoardDTO">
+		<include refid="boardColumn"/>
+		FROM
+			TB_SPRING_BOARD
+	    WHERE
+	    	STATUS = 'Y'
+	  <choose>
+	  	<when test="condition =='writer'">
+	  		AND BOARD_WRITER
+	  	</when>
+	  	<when test="condition =='content'">
+	  		AND BOARD_CONTENT
+	  	</when>
+		<otherwise>
+			AND BOARD_TITLE
+		</otherwise>	  	
+	  </choose>
+	  		LIKE '%' || #{keyword} || '%'
+	  	ORDER
+	  		BY
+	  			BOARD_NO DESC	
 	</select>
 	
 	
 	
+	<insert id="inserReply" parameterType="com.kh.spring.reply.model.dto.ReplyDTO">
 	
+		INSERT
+			INTO
+				TB_REPLY
+			VALUES
+				(
+				SEQ_RNO.NEXTVAL,
+				#{replyWriter},
+				#{replyContent},
+				STSDATE,
+				#{refBoardNo}
+				)
+			
+	
+	
+	</insert>
+	
+	
+
+
+
+
+
+
+
+
+
+
 
 	
 </mapper>

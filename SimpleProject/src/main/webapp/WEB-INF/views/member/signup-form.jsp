@@ -29,6 +29,50 @@
     <!-- 메뉴바 -->
     <jsp:include page="../include/header.jsp" />
 
+	/* 사용자가 아이디를 입력하는 input요소에 무언가 값을 입력할 떄마다
+	아이디가 중복인지 체크해주기*/
+	
+	
+	<script>
+	window.onload=function(){
+		const inputEl = document.querySelector('#signup-form >#userId');
+		console.log(inputEl);
+		
+		inputEl.addEventListener('keyup',e=>{ 
+			
+			const inputValue = inputEl.value;
+			console.log(inputValue);
+			
+			if(inputValue.length >=5){
+				
+				$.ajax({
+					url : `id-check?memberId=\${inputValue}`,
+					type : 'get',
+					
+					success : function(result){ // DB 갔다와서 실행할 함수 , result는 매개변수
+				
+						const responseData = result.substr(4);
+		
+						if(responseData === 'Y'){
+						$('#check-result').show()
+										  .css('color','crmison')
+										  .text('사용할 수 없는 아이디입니다.');
+						}else{ 
+							$('#check-result').show()
+											  .css('color','lightgreen')
+											  .text('정말 멋진 아이디네요!!!!');
+							
+						}
+					}
+					
+				})
+			}
+		})
+	}
+		
+	</script>
+	
+	
     <div class="content">
         <br><br>
         <div class="innerOuter">
@@ -36,9 +80,10 @@
             <br>
 
             <form action="signup" method="post">
-                <div class="form-group">
+                <div class="form-group" id="signup-form">
                     <label for="userId">* ID : </label>
                     <input type="text" class="form-control" id="userId" placeholder="Please Enter ID" name="memberId" required> <br>
+                    <div id="check-result" style="font-size:0.7em;"></div>
 					<!-- name속성은 DTO의 필드명과 동일하게 하는 것이 좋음
 						왜?????????????????????
 						-> 실수를 덜함. 생산성 향상 

@@ -1,6 +1,7 @@
 package com.kh.spring.board.model.mapper;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
@@ -36,4 +37,35 @@ public interface BoardMapper {
    
    int deleteBoard(int boardNo);
 
+   // ------------ 2절
+   // 조회결과에 따라 몇개의 게시물을 찾았는지 확인하는 메서드
+   int searchedCount(Map<String, String> map);
+   
+
+   List<BoardDTO> selectSearchList(Map<String, String> map, RowBounds rb);
+   
+   //댓글 추가
+   int insertReply(ReplyDTO reply);
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
 }
+
+
+
+
+
+
+
+
+
+
+

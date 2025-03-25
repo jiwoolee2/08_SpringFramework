@@ -1,5 +1,6 @@
 package com.kh.spring.board.controller;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -11,12 +12,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.kh.spring.board.model.dto.BoardDTO;
 import com.kh.spring.board.model.service.BoardService;
 import com.kh.spring.exception.InvalidParameterException;
+import com.kh.spring.reply.model.dto.ReplyDTO;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -95,7 +98,52 @@ public class BoardController {
       return mv;
    }
    
+   
+   // 게시판 검색 기능
+   @GetMapping("search")
+   public ModelAndView doSearch(@RequestParam(name="condition") String condition,
+		   						@RequestParam(name="keyword") String keyword,
+		   						@RequestParam(name="page", defaultValue="1") int page,
+		   						ModelAndView mv) {
+	   
+	   Map<String, String> map = new HashMap();
+	   
+	   
+	   map.put("condition", condition);  // 제목인지,작성자인지,내용인지
+	   map.put("keyword", keyword);		 // 입력값
+	   map.put("currentPage", String.valueOf(page));
+	   
+	   
+	   Map<String, Object> list = boardService.doSearch(map);
+	   list.put("condition", condition);
+	   list.put("keyword",keyword);
+	   mv.addObject("map",list).setViewName("board/board_list");
+	   return mv; 
+   }
 
+   
+   
+   
+   @ResponseBody
+   @PostMapping("reply")
+   public String insertReply(ReplyDTO reply,HttpSession session) {
+	   
+	   log.info("{}",reply);
+	   return String.valueOf(boardService.insertReply(reply, session));
+   }
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
    
 
 }

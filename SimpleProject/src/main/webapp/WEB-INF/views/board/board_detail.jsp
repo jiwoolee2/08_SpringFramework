@@ -83,16 +83,54 @@
                 <a class="btn btn-danger" href="">취소하기</a>
             </div>
             <br><br>
-
+			
+			
+			
+			
+			
+			
+			<!-- 댓글달기 기능  -->
+			
+			<script type="text/javascript">
+				function insertReply(){
+					$.ajax({
+						url : '/spring/reply',
+						type :'post',
+						date : {
+							// id가 content인 영역의 값을 replyContent에, boardNo을 refBoardNo에 담아서
+							// controller에 "reply"매핑값을 찾아서 전송
+							replyContent : document.querySelector('#content').value,
+							refBoardNo : ${board.boardNo}
+						},
+						success : result => {
+							
+							console.log(result);
+							
+							if(result == 1){
+								location.href = location.href;
+							}
+						}
+						
+						
+						
+					});
+					
+				}
+				
+			
+			
+			</script>
+			
+			
             <table id="replyArea" class="table" align="center">
                 <thead>
                     <tr>
                         <th colspan="2">
                             <textarea class="form-control" name="" id="content" cols="55" rows="2" style="resize:none; width:100%;"></textarea>
                         </th>
-                        <th style="vertical-align:middle"><button class="btn btn-secondary">등록하기</button></th> 
+                        <th style="vertical-align:middle"><button onclick="insertReply()" class="btn btn-secondary">등록하기</button></th> 
                     </tr>
-                    <tr>
+                    <tr>												<!-- 댓글 개수  -->
                         <td colspan="3">댓글(<span id="rcount">${ board.replyList.size() }</span>)</td>
                     </tr>
                 </thead>

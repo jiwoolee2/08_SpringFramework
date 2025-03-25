@@ -120,9 +120,25 @@
                <c:forEach begin="${ map.pageInfo.startPage }" 
                         end="${ map.pageInfo.endPage }" 
                         var="num">
-                       <li class="page-item">
-                          <a class="page-link" href="boards?page=${ num }">${ num }</a>
-                       </li>
+                        
+                    <li class="page-item">
+                    
+                 		<c:choose>
+                 			<c:when test="${empty map.condition }">
+                 		<!-- 일반 게시글 목록 조회 요청 (검색안했을때)  -->
+                       		<a class="page-link" href="boards?page=${ num }">${ num }</a>
+                       
+                       		</c:when>
+                       		<c:otherwise>
+                       	<!-- 검색 게시글 목록 조회 요청 -->
+		                    <a class="page-link" 
+		                    href="search?page=${num}&condition=${map.condition}&keyword=${map.keyword}">
+		                    ${num}</a>
+		                    </c:otherwise>
+                      	 </c:choose>
+                    </li>
+                       
+                       
                </c:forEach>
                     
                     <li class="page-item"><a class="page-link" href="#">다음</a></li>
@@ -132,7 +148,7 @@
 
             <br clear="both"><br>
 
-            <form id="searchForm" action="" method="get" align="center">
+            <form id="searchForm" action="search" method="get" align="center">
                 <div class="select">
                     <select class="custom-select" name="condition">
                         <option value="writer">작성자</option>
@@ -141,7 +157,7 @@
                     </select>
                 </div>
                 <div class="text">
-                    <input type="text" class="form-control" name="keyword">
+                    <input type="text" class="form-control" name="keyword" value="${map.keyword}">
                 </div>
                 <button type="submit" class="searchBtn btn btn-secondary">검색</button>
             </form>
@@ -149,6 +165,36 @@
         </div>
         <br><br>
     </div>
+    
+    
+    
+    <script>
+    
+    	// 현재 자바스크립트 사용 목적 : 화면상의 html요소의 속성을 변경하기 위해
+    	// 이번에는 작성자 제목 내용중 선택된 하나를 선택해서 나오게 하려고 사용
+    	
+    	window.onload = function(){
+    		
+    		const currentUrl = window.location.href;
+    		
+    		// console.log(currentUrl);
+    		
+    		const obj = new URL(currentUrl)
+    		const condition = obj.searchParams.get('condition');
+    		
+			const selected = document.querySelector(`option[value="\${condition}"]`);
+			selected.selected = true;
+    	}
+    
+    
+    
+    </script>
+    
+    
+    
+
+    
+    
 
     <jsp:include page="../include/footer.jsp" />
 

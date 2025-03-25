@@ -22,9 +22,13 @@
 	<!-- spring이 직접 관리하도록 함 -> Bean등록/XML파일이용  -->
 	
 	<typeAliases>
+		<typeAlias type="com.kh.spring.member.model.dao.MemberDAO" 
+				   alias="memberDAO"/>
 		<typeAlias type="com.kh.spring.member.model.dto.MemberDTO" 
 				   alias="memberDTO"/>
 	</typeAliases>
+	
+
 	
 	<mappers>
 		<mapper resource="/mapper/member-mapper.xml"/>

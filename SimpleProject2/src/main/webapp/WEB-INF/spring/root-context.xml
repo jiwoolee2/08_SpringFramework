@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd">
+	xmlns:mybatis-spring="http://mybatis.org/schema/mybatis-spring"
+	xsi:schemaLocation="http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring-1.2.xsd
+		http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd">
 	
 	<!-- Root Context: defines shared resources visible to all other web components -->
 	
@@ -10,6 +12,8 @@
 		 => 서버가 구동되면서 세팅되어야하는(Bean등록) 내용들을 작성 (DB접속, 트랜잭션처리, 외부모듈연결 등등...)
 		 Bean == Spring이 생명주기를 관리하는 객체
 	-->	
+	
+	
 	<bean class="org.apache.commons.dbcp.BasicDataSource"
 		  id="dataSource"
 		  destroy-method="close">
@@ -42,4 +46,5 @@
 	 	SqlSession sqlSession = new SqlSessionTemplate(sqlSessionFactory);
 	  -->
 		
+	<mybatis-spring:scan base-package="com.kh.spring.member.model.dao"/>
 </beans>

@@ -145,7 +145,7 @@
               <a class="nav-link" aria-current="page" href="log-in">Login</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="sign-up-form">Signup</a>
+              <a class="nav-link" href="signup-form">Signup</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="log-out">Logout</a>

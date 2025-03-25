@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -26,7 +27,7 @@
 </head>
 <body>
     
-
+	
 
     <div class="content">
         <br><br>
@@ -66,6 +67,20 @@
                     <button type="reset" class="btn btn-danger">초기화</button>
                 </div>
             </form>
+            
+            
+            
+            
+        
+<%--             <c:if test="${msg != null }">
+	            <script>
+			
+					alert(`${msg}`);
+			
+		       </script>
+           		<c:remove var="msg" scope="mv"/>
+            </c:if> --%>
+            
         </div>
         <br><br>
 

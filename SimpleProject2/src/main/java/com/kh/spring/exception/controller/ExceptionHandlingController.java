@@ -1,13 +1,14 @@
 package com.kh.spring.exception.controller;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.kh.spring.exception.InvalidParameterException;
-import com.kh.spring.exception.MemberNotFoundException;
-import com.kh.spring.exception.PasswordNotMatchException;
-import com.kh.spring.exception.TooLargeValueException;
+import com.kh.spring.exception.DuplicatedIdException;
+import com.kh.spring.exception.NullException;
+
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -15,39 +16,37 @@ import lombok.extern.slf4j.Slf4j;
 @ControllerAdvice // 발생한 예외가 여기로 옴
 public class ExceptionHandlingController {
 	
-	private ModelAndView createErrorResponse(String errorMsg, Exception e) {
+	
+
+
+	/*
+	 * 에러 메세지와 예외를 인자로 받아
+	 * ModelAndView에 에러머세지를 담고, 포워딩할 경로 설정
+	 */
+	private ModelAndView createErrorResponse(Exception e) {
 		ModelAndView mv = new ModelAndView();
 		mv.addObject("message",e.getMessage())
-		  .setViewName("include/error_page");
-		log.info("발생 예외 : {}",errorMsg,e);
+		  .setViewName("member/signup-form");
 		return mv;
 	}
 	
-	@ExceptionHandler(InvalidParameterException.class) // 특정 예외 처리
-	protected ModelAndView InvalidParameterError(InvalidParameterException e) {
-		return createErrorResponse(e.getMessage(),e);
+	// @ExceptionalHandler : 특정 에외를 처리
+	// 중복된 아이디로 인한 예외
+	@ExceptionHandler(DuplicatedIdException.class) 
+	protected ModelAndView DuplicatedIdExceptionError(DuplicatedIdException e) {
+		return createErrorResponse(e);
 	}
 		
 	
-	
+	// 회원가입 시 id, pw, name, residence 중 하나라도 미입력으로 인한 예외
 	@ExceptionHandler
-	(TooLargeValueException.class)
-	protected ModelAndView tooLargeValueError(TooLargeValueException e) {
-		return createErrorResponse(e.getMessage(),e);
+	(NullException.class)
+	protected ModelAndView NullExceptionError(NullException e) {
+		return createErrorResponse(e);
 	}
 	
 	
-	@ExceptionHandler
-	(MemberNotFoundException.class)
-	protected ModelAndView tooLargeValueError(MemberNotFoundException e) {
-		return createErrorResponse(e.getMessage(),e);
-	}
 	
 	
-	@ExceptionHandler
-	(PasswordNotMatchException.class)
-	protected ModelAndView tooLargeValueError(PasswordNotMatchException e) {
-		return createErrorResponse(e.getMessage(),e);
-	}
 	
 }

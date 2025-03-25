@@ -26,29 +26,38 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class MemberController {
 	
-
+	final MemberService memberService;
+	
 	@GetMapping("log-in")
 	public ModelAndView login() {
-		
+		return null;
 	}
 	
 	public ModelAndView logout() {
+		return null;
+	}
+	
+	@GetMapping("signup-form")
+	public String signupForm() {
+		return "member/signup-form";
+	}
+
+	/* 회원가입
+	 * 성공시 -> alert메세지 띄우기
+	 * 실패시 -> 예외처리
+	 */
+	@PostMapping("sign-up")
+	public String signup(MemberDTO member) {
 		
-	}
-	
-	@GetMapping("sign-up-form")
-	public String signupForm() {
-		return "/member/signup-form";
-	}
-	
-	@GetMapping("sign-up")
-	public String signupForm() {
-		return "/member/signup-form";
+		
+		memberService.signup(member);
+		
+		return "redirect:/";
 	}
 	
 	
 	public String join() {
-		
+		return null;
 	}
 
 }
